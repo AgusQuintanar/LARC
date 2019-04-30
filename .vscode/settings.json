@@ -1,0 +1,5 @@
+{
+    "ev3devBrowser.download.exclude": "{**/.*,LICENSE,README.md}",
+    "files.eol": "\n",
+    "git.ignoreLimitWarning": true
+}
