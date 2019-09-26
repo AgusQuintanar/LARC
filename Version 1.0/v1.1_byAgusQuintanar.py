@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 # So program can be run from Brickman
-
-
 # <--Importar librerías-->
 
 from ev3dev.ev3 import *
@@ -26,7 +24,6 @@ coloresIzq = {"afuera": [(11, 8, 4), "sentido"],"negro": [(26, 35, 14), "sentido
                "azulRampa": [(47, 139, 104), "sentido"]}
 
 # <---Puertos--->
-
 # --Sensor Ultrasonico--
 usIzq = UltrasonicSensor('in3')
 usIzq.mode = 'US-DIST-CM'
@@ -91,7 +88,6 @@ def recogerMonoDerecha():
     motoresTanquePair.on_for_rotations(-10, -10, 1)
     girar90GradosIzquierda()
 
-
 def recogerMono():
     direccion = stopRobotAtPerson()
     motoresTanquePair.off(brake=True)
@@ -101,13 +97,11 @@ def recogerMono():
         recogerMonoDerecha()
     return direccion ** 2
 
-
 def avanzarCentroCuadro(color):
     if color == 'negro':
         motoresTanqueGirar.off(brake=True)
     else:
-        motoresTanqueGirar.on_for_seconds(30, 30, 1.5, brake=True, block=True)
-
+        motoresTanqueGirar.on_for_seconds(30, 30, 1.2, brake=True, block=True)
 
 def obtenerColorDer():
     error = 100
@@ -120,7 +114,6 @@ def obtenerColorDer():
         return color
     return 'afuera'
 
-
 def obtenerColorIzq():
     error = 100
     color = 'afuera'
@@ -132,28 +125,24 @@ def obtenerColorIzq():
         return color
     return 'afuera'
 
-
 def vacioIzq(colorIzq):
     if colorIzq == 'vacio':
         motoresTanqueGirar.on_for_rotations(40, 0, .3)
-
 
 def vacioDer(colorDer):
     if colorDer == 'vacio':
         motoresTanqueGirar.on_for_rotations(0, 40, .3)
 
-
 def alinearseEntrada():
     colorIzq = obtenerColorIzq()
     colorDer = obtenerColorDer()
-    motoresTanqueGirar.on_for_rotations(-20, -20, .4)
+    motoresTanqueGirar.on_for_rotations(-20, -20, 1)
     while colorIzq == 'blanco':
         motoresTanqueGirar.on(30, 25)
         colorIzq = obtenerColorIzq()
     while colorDer == 'blanco':
         motoresTanqueGirar.on(0, 10)
         colorDer = obtenerColorDer()
-
 
 def alinearseSalida():
     colorIzq = obtenerColorIzq()
@@ -173,20 +162,16 @@ def alinearseSalida():
         colorDer = obtenerColorDer()
     motoresTanqueGirar.on_for_rotations(20, 20, .5)
 
-
 def avanzarSigColor():
-    colorIzq = obtenerColorIzq()
-    colorDer = obtenerColorDer()
-    while (coloresIzq == 'blanco' or coloresIzq == 'vacio') and (colorDer == 'blanco' or colorDer == 'vacio'):
+    colorIzq = 'blanco'
+    while (coloresIzq == 'blanco' or coloresIzq == 'vacio'):
         vacioIzq(colorIzq)
         vacioDer(vacioDer)
         motoresTanqueGirar.on(50, 50)
         colorIzq = obtenerColorIzq()
-        colorDer = obtenerColorDer()
     alinearseEntrada()
     avanzarCentroCuadro(coloresIzq)
     return colorIzq
-
 
 def alinearseRampa():
     colorIzq = obtenerColorIzq()
@@ -195,8 +180,6 @@ def alinearseRampa():
         motoresTanqueGirar.on(10,10)
     alinearseSalida()
     
-
-
 def detectarRampa(color):
     motoresTanqueGirar.on_for_rotations(20, 20, .3)
     colorIzq = obtenerColorIzq()
@@ -246,13 +229,11 @@ def identificarSentidoColor(colorCuadroLlegada):
         color = avanzarSigColor()
         avanzarCentroCuadro(color)
 
-
 def mapearPista():
     colorCuadroLlegada = avanzarSigColor()
     while coloresIzq['rojo'][1] == 'sentido' or coloresIzq['azul'][1] == 'sentido' or coloresIzq['verde'][1] == 'sentido':
         colorCuadroLlegada = identificarSentidoColor(colorCuadroLlegada)
     return True
-
 
 def salirFuerza():
     girar90GradosIzquierda()
@@ -320,7 +301,7 @@ def dejarMonos():
 
 
 def recorrerPista():
-    rampa = False  # Hacer funcion para detectar rampa
+    rampa = False  
     monos_recogidos = 0
     while not rampa:
         cuadroDespuesMapeado = avanzarSigColorDespuesMapeado()
@@ -336,13 +317,9 @@ def recorrerPista():
 
 
 def main():
-
     mapearPista()
-    while True:
+    while True: #The while loop never ends because of the purpose of the competition
         recorrerPista()
         dejarMonos()
-
-while True:
-    print(obtenerColorIzq(),obtenerColorDer())
     
 
